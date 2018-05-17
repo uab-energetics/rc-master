@@ -1,4 +1,4 @@
 /.idea/
-.env*
+.environments/.env*
 /.keys/*
 !/.keys/generate.sh

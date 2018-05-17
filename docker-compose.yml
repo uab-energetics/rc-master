@@ -16,12 +16,12 @@ services:
       context: ./rc-api-gateway
       dockerfile: Dockerfile.dev
     container_name: rc-api-gateway
-    env_file: .env.gateway
+    env_file: .environments/.env.gateway
     environment:
       RC_API_HOST: rc-api
       PORT: 80
     ports:
-      - 8001:80
+      - 8080:80
 
   # AUTH SERVICE
   rc-auth:
@@ -29,9 +29,12 @@ services:
       context: ./rc-auth
       dockerfile: Dockerfile.dev
     container_name: rc-auth
-    env_file: .env.auth
+    restart: always
+    volumes:
+      - .keys/rc-auth-jwt.key:/.keys/rc-auth-jwt.key      # JWT Private Key
+      - .keys/rc-auth-jwt.key.pub:/.keys/rc-auth-jwt.key.pub      # JWT Private Key
+    env_file: .environments/.env.auth
     environment:
-      RC_API_HOST: rc-api
       PORT: 80
     ports:
       - 8004:80
@@ -39,6 +42,7 @@ services:
   # AUTH SERVICE DATABASE
   rc-auth-mongodb:
     image: mongo:latest
+    container_name: rc-auth-mongodb
     restart: always
     ports:
       - 27017:27017
@@ -50,7 +54,9 @@ services:
   rc-api:
     build: ./research-coder-api
     container_name: rc-api
-    env_file: .env.api
+    volumes:
+      - .keys/rc-auth-jwt.key.pub:/.keys/rc-auth-jwt.key.pub    # JWT Public Key
+    env_file: .environments/.env.api
     environment:
       - DB_HOST=rc-api-db
       - DB_PORT=3306
