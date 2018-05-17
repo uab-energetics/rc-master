@@ -1,0 +1,9 @@
+[submodule "rc-api-gateway"]
+	path = rc-api-gateway
+	url = https://github.com/uab-energetics/rc-api-gateway
+[submodule "research-coder-api"]
+	path = research-coder-api
+	url = https://github.com/uab-energetics/research-coder-api
+[submodule "research-coder"]
+	path = research-coder
+	url = https://github.com/uab-energetics/research-coder
