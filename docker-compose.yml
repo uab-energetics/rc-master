@@ -23,6 +23,29 @@ services:
     ports:
       - 8001:80
 
+  # AUTH SERVICE
+  rc-auth:
+    build:
+      context: ./rc-auth
+      dockerfile: Dockerfile.dev
+    container_name: rc-auth
+    env_file: .env.auth
+    environment:
+      RC_API_HOST: rc-api
+      PORT: 80
+    ports:
+      - 8004:80
+
+  # AUTH SERVICE DATABASE
+  rc-auth-mongodb:
+    image: mongo:latest
+    restart: always
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: secret
+
   # MONOLITH API
   rc-api:
     build: ./research-coder-api
@@ -34,7 +57,7 @@ services:
     ports:
       - 8000:80
 
-  # DATABASE FOR MONOLITH API
+  # MONOLITH API DATABASE
   rc-api-db:
     image: mysql:5.7
     container_name: rc-api-db

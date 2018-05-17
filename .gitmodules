@@ -7,3 +7,6 @@
 [submodule "research-coder"]
 	path = research-coder
 	url = https://github.com/uab-energetics/research-coder
+[submodule "rc-auth"]
+	path = rc-auth
+	url = https://github.com/uab-energetics/rc-auth
