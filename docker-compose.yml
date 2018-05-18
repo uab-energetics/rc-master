@@ -26,15 +26,17 @@ services:
       context: ./rc-auth
       dockerfile: Dockerfile.dev
     container_name: rc-auth
-    restart: always
     volumes:
-      - .keys/rc-auth-jwt.key:/.keys/rc-auth-jwt.key      # JWT Private Key
-      - .keys/rc-auth-jwt.key.pub:/.keys/rc-auth-jwt.key.pub      # JWT Private Key
-    env_file: .environments/.env.auth
+      - ./rc-auth/.keys/rc-auth-jwt.key:${JWT_PRIVATE_KEY}      # JWT Private Key
+      - ./rc-auth/.keys/rc-auth-jwt.key.pub:${JWT_PUBLIC_KEY}      # JWT Private Key
+    env_file: .env
     environment:
-      PORT: 80
+      RABBITMQ_HOST: rabbitmq
+      MONGO_HOST: rc-auth-mongodb
+      JWT_PRIVATE_KEY: ${JWT_PRIVATE_KEY}
+      JWT_PUBLIC_KEY: ${JWT_PUBLIC_KEY}
     ports:
-      - 8004:80
+      - 7000:80
 
   # AUTH SERVICE DATABASE
   rc-auth-mongodb:
@@ -44,23 +46,32 @@ services:
     ports:
       - 27017:27017
 
+  # RABBITMQ
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - 15672:15672
+      - 5672:5672
+
   # MONOLITH API
-  rc-api:
+  rc-backend:
     build: ./research-coder-api
-    container_name: rc-api
+    container_name: rc-backend
     volumes:
-      - .keys/rc-auth-jwt.key.pub:/.keys/rc-auth-jwt.key.pub    # JWT Public Key
+      - ./rc-auth/.keys/rc-auth-jwt.key.pub:${JWT_PUBLIC_KEY}    # JWT Public Key
     env_file: .environments/.env.api
     environment:
-      - DB_HOST=rc-api-db
-      - DB_PORT=3306
+      DB_HOST: rc-api-db
+      DB_PORT: 3306
+      JWT_PUBLIC_KEY: ${JWT_PUBLIC_KEY}
     ports:
       - 8000:80
 
   # MONOLITH API DATABASE
-  rc-api-db:
+  rc-backend-db:
     image: mysql:5.7
-    container_name: rc-api-db
+    container_name: rc-backend-db
     ports:
       - 3306:3306
     environment:
@@ -75,3 +86,18 @@ services:
     container_name: rc-client
     ports:
       - 4200:4200
+
+  # HTTP Dispatcher for Backend
+  rc-amqp-http-dispatcher:
+    build:
+      context: ./rc-amqp-http-dispatcher
+      dockerfile: Dockerfile.dev
+    container_name: rc-amqp-http-dispatcher
+    volumes:
+      - ./:/app
+    environment:
+      RABBITMQ_HOST: rabbitmq
+      BACKEND_HOST: rc-backend
+      BACKEND_SECRET: secret
+    ports:
+      - 8005:80
