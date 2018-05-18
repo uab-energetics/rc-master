@@ -1,8 +1,5 @@
 version: '3.3'
 
-volumes:
-  db-data-dev:
-
 networks:
   default:
     external:
@@ -46,9 +43,6 @@ services:
     restart: always
     ports:
       - 27017:27017
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: secret
 
   # MONOLITH API
   rc-api:
@@ -69,8 +63,6 @@ services:
     container_name: rc-api-db
     ports:
       - 3306:3306
-    volumes:
-      - db-data-dev:/var/lib/mysql
     environment:
       - MYSQL_DATABASE=research-coder
       - MYSQL_USER=homestead

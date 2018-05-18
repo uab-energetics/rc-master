@@ -10,3 +10,6 @@
 [submodule "rc-auth"]
 	path = rc-auth
 	url = https://github.com/uab-energetics/rc-auth
+[submodule "rc-amqp-http-dispatcher"]
+	path = rc-amqp-http-dispatcher
+	url = https://github.com/chrisrocco/rc-amqp-http-dispatcher
