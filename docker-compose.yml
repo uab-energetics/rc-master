@@ -62,11 +62,12 @@ services:
       - ./rc-auth/.keys/rc-auth-jwt.key.pub:${JWT_PUBLIC_KEY}    # JWT Public Key
     env_file: .environments/.env.api
     environment:
-      DB_HOST: rc-api-db
+      DB_HOST: rc-backend-db
       DB_PORT: 3306
       JWT_PUBLIC_KEY: ${JWT_PUBLIC_KEY}
     ports:
-      - 8000:80
+      - 8000:8000
+    entrypoint: php artisan serve --host 0.0.0.0 --port 8000
 
   # MONOLITH API DATABASE
   rc-backend-db:
@@ -93,11 +94,9 @@ services:
       context: ./rc-amqp-http-dispatcher
       dockerfile: Dockerfile.dev
     container_name: rc-amqp-http-dispatcher
-    volumes:
-      - ./:/app
     environment:
       RABBITMQ_HOST: rabbitmq
-      BACKEND_HOST: rc-backend
+      BACKEND_HOST: rc-backend:8000
       BACKEND_SECRET: secret
     ports:
       - 8005:80
