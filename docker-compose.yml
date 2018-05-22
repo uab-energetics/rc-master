@@ -23,7 +23,7 @@ services:
   # AUTH SERVICE
   rc-auth:
     build:
-      context: ./rc-auth
+      context: ./rc-authentication
       dockerfile: Dockerfile.dev
     container_name: rc-auth
     volumes:
@@ -83,7 +83,9 @@ services:
 
   # FRONT END ANGULAR APP
   rc-client:
-    build: ./research-coder
+    build: 
+      context: ./research-coder
+      dockerfile: Dockerfile.dev
     container_name: rc-client
     ports:
       - 4200:4200
