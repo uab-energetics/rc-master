@@ -7,6 +7,18 @@ networks:
 
 services:
 
+  # RABBITMQ
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: "guest"
+      RABBITMQ_DEFAULT_PASS: "guest"
+      RABBITMQ_DEFAULT_VHOST: "/"
+    ports:
+      - 15672:15672
+      - 5672:5672
+
   # API GATEWAY
   rc-api-gateway:
     build:
@@ -15,56 +27,56 @@ services:
     container_name: rc-api-gateway
     env_file: .environments/.env.gateway
     environment:
-      RC_API_HOST: rc-api
+      RC_API_HOST: rc-backend
+      RC_AUTHENTICATION_HOST: rc-authentication
       PORT: 80
     ports:
       - 8080:80
 
   # AUTH SERVICE
-  rc-auth:
+  rc-authentication:
     build:
       context: ./rc-authentication
       dockerfile: Dockerfile.dev
-    container_name: rc-auth
+    container_name: rc-authentication
     volumes:
-      - ./rc-auth/.keys/rc-auth-jwt.key:${JWT_PRIVATE_KEY}      # JWT Private Key
-      - ./rc-auth/.keys/rc-auth-jwt.key.pub:${JWT_PUBLIC_KEY}      # JWT Private Key
+      - .keys/rc-auth-jwt.key:/private-key.pem
+      - .keys/rc-auth-jwt.key.pub:/public-key.pub
     env_file: .env
     environment:
       RABBITMQ_HOST: rabbitmq
-      MONGO_HOST: rc-auth-mongodb
-      JWT_PRIVATE_KEY: ${JWT_PRIVATE_KEY}
-      JWT_PUBLIC_KEY: ${JWT_PUBLIC_KEY}
+      MONGO_HOST: rc-authentication-mongodb
+      JWT_PRIVATE_KEY: /private-key.pem
+      JWT_PUBLIC_KEY: /public-key.pub
     ports:
       - 7000:80
 
   # AUTH SERVICE DATABASE
-  rc-auth-mongodb:
+  rc-authentication-mongodb:
     image: mongo:latest
-    container_name: rc-auth-mongodb
+    container_name: rc-authentication-mongodb
     restart: always
     ports:
       - 27017:27017
 
-  # RABBITMQ
-  rabbitmq:
-    image: rabbitmq:3-management
-    container_name: rabbitmq
-    ports:
-      - 15672:15672
-      - 5672:5672
-
   # MONOLITH API
   rc-backend:
-    build: ./research-coder-api
+    build: 
+        context: ./research-coder-api
+        dockerfile: Dockerfile.dev
     container_name: rc-backend
     volumes:
-      - ./rc-auth/.keys/rc-auth-jwt.key.pub:${JWT_PUBLIC_KEY}    # JWT Public Key
+      - .keys/rc-auth-jwt.key.pub:${JWT_PUBLIC_KEY}    # JWT Public Key
     env_file: .environments/.env.api
     environment:
       DB_HOST: rc-backend-db
       DB_PORT: 3306
       JWT_PUBLIC_KEY: ${JWT_PUBLIC_KEY}
+      AUTH_API_SECRET: secret
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USER: guest
+      RABBITMQ_PASSWORD: guest
     ports:
       - 8000:8000
     entrypoint: php artisan serve --host 0.0.0.0 --port 8000
@@ -74,7 +86,7 @@ services:
     image: mysql:5.7
     container_name: rc-backend-db
     ports:
-      - 3306:3306
+      - 33061:3306
     environment:
       - MYSQL_DATABASE=research-coder
       - MYSQL_USER=homestead
@@ -100,3 +112,25 @@ services:
       BACKEND_SECRET: secret
     ports:
       - 8005:80
+
+  # Authorization
+  rc-authorization:
+    build: ./rc-authorization
+    container_name: rc-authorization
+    environment:
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_USER: guest
+      RABBITMQ_PASS: guest
+      MYSQL_HOST: rc-authorization-db
+      MYSQL_DATABASE: authorization
+      MYSQL_USER: root
+      MYSQL_PASSWORD: secret
+
+  rc-authorization-db:
+    image: mysql:5.7
+    ports:
+      - 33060:3306
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: authorization
