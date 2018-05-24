@@ -12,7 +12,6 @@ initConfig({
     defaultUserImage: env("USER_IMAGE", "https://qualiscare.com/wp-content/uploads/2017/08/default-user.png"),
 
     oauth: {
-
         spaCallback: env('SPA_OAUTH_CALLBACK', 'http://localhost'),
 
         github: {

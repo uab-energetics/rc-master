@@ -1,4 +1,6 @@
 import {User} from "../../models/User";
+import {rabbitEvent} from "../../events/rabbitmq";
+import {newUser} from "../../events/actions";
 
 const axios = require('axios')
 const qs = require('querystring')
@@ -54,12 +56,12 @@ export let exchangeCodeForAccessToken = ({ code, clientID, redirectURI, clientSe
     }).then(response => qs.parse(response.data))
 }
 
-
 export let findOrCreateUser = async (profileData: UserProfileResponse) => {
 
     let user = await User.findOne({ email: profileData.email })
     if(user) return user
 
+    rabbitEvent(newUser(user))
     return await User.create({
         name: profileData.name,
         image: profileData.avatar_url,
