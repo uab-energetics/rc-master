@@ -11,25 +11,23 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.dev
-    container_name: rc-auth
     volumes:
       - ./:/app
       - .keys:/.keys
-#      - .keys/rc-auth-jwt.key:/.keys/rc-auth-jwt.key      # JWT Private Key
-#      - .keys/rc-auth-jwt.key.pub:/.keys/rc-auth-jwt.key.pub      # JWT Private Key
-    env_file: .env
+    env_file:
+      - .env
     environment:
       RABBITMQ_HOST: rabbitmq
-      MONGO_HOST: rc-auth-mongodb
-      JWT_PRIVATE_KEY: /.keys/rc-auth.pem
-      JWT_PUBLIC_KEY: /.keys/pub/rc-auth.pub
+      MONGO_HOST: database
+      SPA_OAUTH_CALLBACK: http://localhost
+      JWT_PRIVATE_KEY: /.keys/rc-authentication.pem
+      JWT_PUBLIC_KEY: /.keys/pub/rc-authentication.pub
+      # GITHUB_CLIENT_ID: secret # REQUIRED FOR GITHUB LOGIN
     ports:
       - 7000:80
 
-  rc-auth-mongodb:
+  database:
     image: mongo:latest
-    container_name: rc-auth-mongodb
-    restart: always
     ports:
       - 27017:27017
 

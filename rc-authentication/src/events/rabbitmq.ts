@@ -1,6 +1,6 @@
 import * as amqp from 'amqplib'
 
-import {app} from "./app";
+import {app} from "../app";
 
 
 export let rabbitConnection
