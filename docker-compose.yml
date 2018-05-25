@@ -30,6 +30,8 @@ services:
       RC_API_HOST: rc-backend
       RC_AUTHENTICATION_HOST: rc-authentication
       PORT: 80
+    volumes:
+      - ./rc-api-gateway/src:/app/src
     ports:
       - 8080:80
 
