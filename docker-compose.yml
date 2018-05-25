@@ -33,7 +33,7 @@ services:
     ports:
       - 8080:80
 
-  # AUTH SERVICE
+  # AUTHENTICATION SERVICE
   rc-authentication:
     build:
       context: ./rc-authentication
@@ -54,7 +54,7 @@ services:
       - 7000:80
 
 
-  # AUTH SERVICE DATABASE
+  # AUTHENTICATION SERVICE DATABASE
   rc-authentication-mongodb:
     image: mongo:latest
     container_name: rc-authentication-mongodb
@@ -87,7 +87,6 @@ services:
       RABBITMQ_PASSWORD: guest
     ports:
       - 8000:8000
-    entrypoint: php artisan serve --host 0.0.0.0 --port 8000
 
   # MONOLITH API DATABASE
   rc-backend-db:
@@ -125,7 +124,7 @@ services:
     ports:
       - 8005:80
 
-  # Authorization
+  # AUTHORIZATION SERVICE
   rc-authorization:
     build: ./rc-authorization
     container_name: rc-authorization
@@ -140,6 +139,7 @@ services:
     ports:
       - 8002:5000
 
+  # DATABASE FOR AUTHORIZATION SERVICE
   rc-authorization-db:
     image: mysql:5.7
     container_name: rc-authorization-db
