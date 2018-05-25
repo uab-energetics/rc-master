@@ -44,12 +44,14 @@ services:
     volumes:
       - .keys/rc-auth.key:/private-key.pem
       - .keys/rc-auth.key.pub:/public-key.pub
+      - ./rc-authentication/src:/app/src
+      - ./rc-authentication/test:/app/test
     env_file: .env
     environment:
       RABBITMQ_HOST: rc-rabbitmq
       RABBITMQ_USER: guest
       RABBITMQ_PASS: guest
-      MONGO_HOST: rc-authentication-mongodb
+      MONGO_HOST: rc-authentication-db
       JWT_PRIVATE_KEY: /private-key.pem
       JWT_PUBLIC_KEY: /public-key.pub
     ports:
@@ -57,9 +59,9 @@ services:
 
 
   # AUTHENTICATION SERVICE DATABASE
-  rc-authentication-mongodb:
+  rc-authentication-db:
     image: mongo:latest
-    container_name: rc-authentication-mongodb
+    container_name: rc-authentication-db
     ports:
       - 27017:27017
 
