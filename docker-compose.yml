@@ -69,6 +69,12 @@ services:
     container_name: rc-backend
     volumes:
       - .keys/rc-auth.key.pub:/rc-auth.key.pub
+      - ./research-coder-api/app:/app/app
+      - ./research-coder-api/tests:/app/tests
+      - ./research-coder-api/config:/app/config
+      - ./research-coder-api/database:/app/database
+      - ./research-coder-api/resources:/app/resources
+      - ./research-coder-api/routes:/app/routes
     env_file: .environments/.env.api
     environment:
       DB_HOST: rc-backend-db
