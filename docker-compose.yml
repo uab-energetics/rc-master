@@ -106,8 +106,11 @@ services:
       context: ./rc-client
       dockerfile: Dockerfile.dev
     container_name: rc-client
+    volumes:
+      - ./rc-client/src:/app/src
+      - ./rc-client/e2e:/app/e2e
     ports:
-      - 4200:80
+      - 4200:4200
 
   # HTTP Dispatcher for Backend
   rc-amqp-http-dispatcher:
