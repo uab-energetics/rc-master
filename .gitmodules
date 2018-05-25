@@ -4,15 +4,15 @@
 [submodule "research-coder-api"]
 	path = research-coder-api
 	url = https://github.com/uab-energetics/research-coder-api
-[submodule "research-coder"]
-	path = research-coder
-	url = https://github.com/uab-energetics/research-coder
-[submodule "rc-auth"]
-	path = rc-auth
-	url = https://github.com/uab-energetics/rc-auth
-[submodule "rc-amqp-http-dispatcher"]
-	path = rc-amqp-http-dispatcher
-	url = https://github.com/chrisrocco/rc-amqp-http-dispatcher
+[submodule "rc-client"]
+	path = rc-client
+	url = https://github.com/uab-energetics/rc-client
+[submodule "rc-authentication"]
+	path = rc-authentication
+	url = https://github.com/uab-energetics/rc-authentication
 [submodule "rc-authorization"]
 	path = rc-authorization
 	url = https://github.com/uab-energetics/rc-authorization
+[submodule "rc-amqp-http-dispatcher"]
+	path = rc-amqp-http-dispatcher
+	url = https://github.com/uab-energetics/rc-amqp-http-dispatcher
