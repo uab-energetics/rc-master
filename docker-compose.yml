@@ -128,6 +128,8 @@ services:
       RABBITMQ_PASS: guest
       BACKEND_HOST: rc-backend:8000
       BACKEND_SECRET: secret
+    volumes:
+      - ./rc-amqp-http-dispatcher/src:/app/src
     ports:
       - 8005:80
 
