@@ -8,9 +8,9 @@ networks:
 services:
 
   # RABBITMQ
-  rabbitmq:
+  rc-rabbitmq:
     image: rabbitmq:3-management
-    container_name: rabbitmq
+    container_name: rc-rabbitmq
     environment:
       RABBITMQ_DEFAULT_USER: "guest"
       RABBITMQ_DEFAULT_PASS: "guest"
@@ -44,7 +44,7 @@ services:
       - .keys/rc-auth.key.pub:/public-key.pub
     env_file: .env
     environment:
-      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_HOST: rc-rabbitmq
       RABBITMQ_USER: guest
       RABBITMQ_PASS: guest
       MONGO_HOST: rc-authentication-mongodb
@@ -52,6 +52,7 @@ services:
       JWT_PUBLIC_KEY: /public-key.pub
     ports:
       - 7000:80
+
 
   # AUTH SERVICE DATABASE
   rc-authentication-mongodb:
@@ -74,7 +75,7 @@ services:
       DB_PORT: 3306
       JWT_PUBLIC_KEY: /rc-auth.key.pub
       AUTH_API_SECRET: secret
-      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_HOST: rc-rabbitmq
       RABBITMQ_PORT: 5672
       RABBITMQ_USER: guest
       RABBITMQ_PASSWORD: guest
@@ -110,7 +111,7 @@ services:
       dockerfile: Dockerfile.dev
     container_name: rc-amqp-http-dispatcher
     environment:
-      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_HOST: rc-rabbitmq
       RABBITMQ_USER: guest
       RABBITMQ_PASS: guest
       BACKEND_HOST: rc-backend:8000
@@ -123,7 +124,7 @@ services:
     build: ./rc-authorization
     container_name: rc-authorization
     environment:
-      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_HOST: rc-rabbitmq
       RABBITMQ_USER: guest
       RABBITMQ_PASS: guest
       MYSQL_HOST: rc-authorization-db
