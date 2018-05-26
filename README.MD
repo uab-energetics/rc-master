@@ -8,7 +8,7 @@ Clone the repository with
 ```bash
 git clone --recursive https://github.com/uab-energetics/rc-master
 ```
-If you didn't use recursive, you can always clone all of the submodules with
+If you didn't use the `--recursive` switch, you can always clone all of the submodules with
 ```bash
 git submodule update --init --recursive
 ```
