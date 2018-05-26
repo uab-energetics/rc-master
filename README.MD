@@ -58,3 +58,4 @@ By default, the source directories of each submodule will be mapped into their r
 * eliminates downloading dependencies just to make changes e.g. `vendor` and `node_modules`
 
 **This will only work if a service doesn't require a build step or has a file-watcher**
+**You will have to rebuild containers upon changing their dependencies**
