@@ -1,7 +1,9 @@
 #!/bin/sh
 
-mkdir -p .keys
-ssh-keygen -t rsa -b 4096 -f .keys/rc-auth.key
-openssl rsa -in .keys/rc-auth.key -pubout -outform PEM -out .keys/rc-auth.key.pub
-cat .keys/rc-auth.key
-cat .keys/rc-auth.key.pub
+KEYSDIR=$(dirname "$0")/../.keys
+
+mkdir -p $KEYSDIR
+ssh-keygen -t rsa -b 4096 -f $KEYSDIR/rc-auth.key
+openssl rsa -in $KEYSDIR/rc-auth.key -pubout -outform PEM -out $KEYSDIR/rc-auth.key.pub
+cat $KEYSDIR/rc-auth.key
+cat $KEYSDIR/rc-auth.key.pub
