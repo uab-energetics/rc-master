@@ -19,6 +19,8 @@ git submodule foreach git checkout master
 ```
 * Or just cd into a submodule directory and checkout whatever branch you want
 
+---
+
 ### Setting up
 First, make your public and private authentication keys:
 ```bash
@@ -28,6 +30,8 @@ Second, ensure that the docker network research-coder exists:
 ```bash
 ./scripts/create-network.sh
 ```
+
+---
 
 ### Running the app
 Since the majority of the services depend on `rabbitmq`, we provide a helper script to run it before starting the rest of the services with `docker-compose up`. Use it as follows:
@@ -44,6 +48,8 @@ Some of our services require some additional database setup before they're ready
 ```bash
 ./scripts/migrate-seed.sh
 ```
+
+---
 
 ### Local development
 By default, the source directories of each submodule will be mapped into their respective container, and will update in real-time. This allows for:
