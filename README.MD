@@ -56,6 +56,5 @@ Some of our services require some additional database setup before they're ready
 By default, the source directories of each submodule will be mapped into their respective container, and will update in real-time. This allows for:
 * developing locally without constantly rebuilding containers
 * eliminates downloading dependencies just to make changes e.g. `vendor` and `node_modules`
-
-**This will only work if a service doesn't require a build step or has a file-watcher**
-**You will have to rebuild containers upon changing their dependencies**
+* **this will only work if a service doesn't require a build step or has a file-watcher**
+* **changing a service's dependencies requires a rebuild of the container**
