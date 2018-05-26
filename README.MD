@@ -7,6 +7,7 @@ as well as a top-level orchestration with docker-compose
 Clone the repository with
 ```bash
 git clone --recursive https://github.com/uab-energetics/rc-master
+cd rc-master
 ```
 If you didn't use the `--recursive` switch, you can always clone all of the submodules with
 ```bash
