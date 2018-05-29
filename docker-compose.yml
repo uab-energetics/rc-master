@@ -93,7 +93,7 @@ services:
       - 8000:8000
 
   rc-backend-queue-worker:
-      container_name: rc-backend-queue-worker-dev
+      container_name: rc-backend-queue-worker
       restart: unless-stopped
       build:
         context: ./research-coder-api
