@@ -92,6 +92,32 @@ services:
     ports:
       - 8000:8000
 
+  rc-backend-queue-worker:
+      container_name: rc-backend-queue-worker-dev
+      restart: unless-stopped
+      build:
+        context: ./research-coder-api
+        dockerfile: Dockerfile.dev
+      volumes:
+        - .keys:/.keys
+        - ./research-coder-api/app:/app/app
+        - ./research-coder-api/tests:/app/tests
+        - ./research-coder-api/config:/app/config
+        - ./research-coder-api/database:/app/database
+        - ./research-coder-api/resources:/app/resources
+        - ./research-coder-api/routes:/app/routes
+      environment:
+        DB_HOST: rc-backend-db
+        DB_PORT: 3306
+        JWT_PUBLIC_KEY: /.keys/jwt.pub
+        AUTH_API_SECRET: secret
+        RABBITMQ_HOST: rc-rabbitmq
+        RABBITMQ_PORT: 5672
+        RABBITMQ_USER: guest
+        RABBITMQ_PASSWORD: guest
+      env_file: .environments/.env.api
+      command: php artisan rabbitmq:listen
+
   # MONOLITH API DATABASE
   rc-backend-db:
     image: mysql:5.7
