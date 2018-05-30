@@ -27,7 +27,7 @@ services:
     container_name: rc-api-gateway
     env_file: .environments/.env.gateway
     environment:
-      RC_API_HOST: rc-backend
+      RC_BACKEND_HOST: rc-backend:8000
       RC_AUTHENTICATION_HOST: rc-authentication
       PORT: 80
     volumes:
