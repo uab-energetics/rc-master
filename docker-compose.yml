@@ -109,7 +109,7 @@ services:
       environment:
         DB_HOST: rc-backend-db
         DB_PORT: 3306
-        JWT_PUBLIC_KEY: /.keys/jwt.pub
+        JWT_PUBLIC_KEY: /.keys/rc-auth.key.pub
         AUTH_API_SECRET: secret
         RABBITMQ_HOST: rc-rabbitmq
         RABBITMQ_PORT: 5672
