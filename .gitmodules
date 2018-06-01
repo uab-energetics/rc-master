@@ -1,9 +1,9 @@
 [submodule "rc-api-gateway"]
 	path = rc-api-gateway
 	url = https://github.com/uab-energetics/rc-api-gateway
-[submodule "research-coder-api"]
-	path = research-coder-api
-	url = https://github.com/uab-energetics/research-coder-api
+[submodule "rc-backend"]
+	path = rc-backend
+	url = https://github.com/uab-energetics/rc-backend
 [submodule "rc-client"]
 	path = rc-client
 	url = https://github.com/uab-energetics/rc-client

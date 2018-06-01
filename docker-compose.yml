@@ -68,17 +68,17 @@ services:
   # MONOLITH API
   rc-backend:
     build: 
-        context: ./research-coder-api
+        context: ./rc-backend
         dockerfile: Dockerfile.dev
     container_name: rc-backend
     volumes:
       - .keys/rc-auth.key.pub:/rc-auth.key.pub
-      - ./research-coder-api/app:/app/app
-      - ./research-coder-api/tests:/app/tests
-      - ./research-coder-api/config:/app/config
-      - ./research-coder-api/database:/app/database
-      - ./research-coder-api/resources:/app/resources
-      - ./research-coder-api/routes:/app/routes
+      - ./rc-backend/app:/app/app
+      - ./rc-backend/tests:/app/tests
+      - ./rc-backend/config:/app/config
+      - ./rc-backend/database:/app/database
+      - ./rc-backend/resources:/app/resources
+      - ./rc-backend/routes:/app/routes
     env_file: .environments/.env.api
     environment:
       DB_HOST: rc-backend-db
@@ -96,16 +96,16 @@ services:
       container_name: rc-backend-queue-worker
       restart: unless-stopped
       build:
-        context: ./research-coder-api
+        context: ./rc-backend
         dockerfile: Dockerfile.dev
       volumes:
         - .keys:/.keys
-        - ./research-coder-api/app:/app/app
-        - ./research-coder-api/tests:/app/tests
-        - ./research-coder-api/config:/app/config
-        - ./research-coder-api/database:/app/database
-        - ./research-coder-api/resources:/app/resources
-        - ./research-coder-api/routes:/app/routes
+        - ./rc-backend/app:/app/app
+        - ./rc-backend/tests:/app/tests
+        - ./rc-backend/config:/app/config
+        - ./rc-backend/database:/app/database
+        - ./rc-backend/resources:/app/resources
+        - ./rc-backend/routes:/app/routes
       environment:
         DB_HOST: rc-backend-db
         DB_PORT: 3306
