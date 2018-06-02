@@ -1,5 +1,9 @@
 version: '3.3'
 
+volumes:
+  rc-authentication-db:
+  rc-backend-db:
+
 networks:
   default:
     external:
@@ -21,6 +25,7 @@ services:
 
   # API GATEWAY
   rc-api-gateway:
+    image: gcr.io/meta-research-data-portal/github-uab-energetics-rc-api-gateway:master
     build:
       context: ./rc-api-gateway
       dockerfile: Dockerfile.dev
@@ -37,6 +42,7 @@ services:
 
   # AUTHENTICATION SERVICE
   rc-authentication:
+    image: gcr.io/meta-research-data-portal/github-uab-energetics-rc-authentication:master
     build:
       context: ./rc-authentication
       dockerfile: Dockerfile.dev
@@ -62,11 +68,14 @@ services:
   rc-authentication-db:
     image: mongo:latest
     container_name: rc-authentication-db
+    volumes:
+      - rc-authentication-db:/data/db
     ports:
       - 27017:27017
 
   # MONOLITH API
   rc-backend:
+#    image: gcr.io/meta-research-data-portal/github-uab-energetics-research-coder-api:master
     build: 
         context: ./rc-backend
         dockerfile: Dockerfile.dev
@@ -93,6 +102,7 @@ services:
       - 8000:8000
 
   rc-backend-queue-worker:
+#      image: gcr.io/meta-research-data-portal/github-uab-energetics-research-coder-api:master
       container_name: rc-backend-queue-worker
       restart: unless-stopped
       build:
@@ -122,6 +132,8 @@ services:
   rc-backend-db:
     image: mysql:5.7
     container_name: rc-backend-db
+    volumes:
+      - rc-backend-db:/var/lib/mysql
     ports:
       - 33061:3306
     environment:
@@ -132,6 +144,7 @@ services:
 
   # FRONT END ANGULAR APP
   rc-client:
+    image: gcr.io/meta-research-data-portal/github-uab-energetics-rc-client:master
     build:
       context: ./rc-client
       dockerfile: Dockerfile.dev
