@@ -3,6 +3,8 @@ version: '3.3'
 volumes:
   rc-authentication-db:
   rc-backend-db:
+  rc-publications-db:
+  rc-pipelines-db:
 
 networks:
   default:
@@ -14,44 +16,34 @@ services:
   ## FRONT END ANGULAR APP
   rc-client:
     container_name: rc-client
-    image: gcr.io/meta-research-data-portal/github-uab-energetics-rc-client:master
-    # build:
-    #   context: ./rc-client
-    #   dockerfile: Dockerfile.dev
-    # volumes:
-    #   - ./rc-client/src:/app/src
-    #   - ./rc-client/e2e:/app/e2e
+    # image: gcr.io/meta-research-data-portal/github-uab-energetics-rc-client:master
+    build:
+      context: ./rc-client
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./rc-client/src:/app/src
+      - ./rc-client/e2e:/app/e2e
     ports:
       - 4200:4200
 
 
   ## BACKEND SERVICES
 
-  rc-rabbitmq:
-    image: rabbitmq:3-management
-    container_name: rc-rabbitmq
-    environment:
-      RABBITMQ_DEFAULT_USER: "guest"
-      RABBITMQ_DEFAULT_PASS: "guest"
-      RABBITMQ_DEFAULT_VHOST: "/"
-    ports:
-      - 15672:15672
-      - 5672:5672
-
   # API Gateway
 
   rc-api-gateway:
     container_name: rc-api-gateway
-    image: gcr.io/meta-research-data-portal/github-uab-energetics-rc-api-gateway:master
-    # build:
-    #   context: ./rc-api-gateway
-    #   dockerfile: Dockerfile.dev
-    # volumes:
-    #   - ./rc-api-gateway/src:/app/src
+    # image: gcr.io/meta-research-data-portal/github-uab-energetics-rc-api-gateway:master
+    build:
+      context: ./rc-api-gateway
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./rc-api-gateway/src:/app/src
     env_file: .environments/.env.gateway
     environment:
       RC_BACKEND_HOST: rc-backend:8000
-      RC_AUTHENTICATION_HOST: rc-authentication
+      RC_AUTHENTICATION_HOST: rc-authentication 
+      RC_PUBLICATIONS_HOST: rc-publications
       PORT: 80
     ports:
       - 8000:80
@@ -60,6 +52,7 @@ services:
 
   rc-authentication:
     container_name: rc-authentication
+    restart: unless-stopped
     image: gcr.io/meta-research-data-portal/github-uab-energetics-rc-authentication:master
     # build:
     #   context: ./rc-authentication
@@ -110,6 +103,7 @@ services:
       DB_PORT: 3306
       JWT_PUBLIC_KEY: /rc-auth.key.pub
       AUTH_API_SECRET: secret
+      PUBLICATION_SERVICE_HOST: http://rc-publications
       RABBITMQ_HOST: rc-rabbitmq
       RABBITMQ_PORT: 5672
       RABBITMQ_USER: guest
@@ -138,6 +132,7 @@ services:
         DB_PORT: 3306
         JWT_PUBLIC_KEY: /.keys/rc-auth.key.pub
         AUTH_API_SECRET: secret
+        PUBLICATION_SERVICE_HOST: http://rc-publications
         RABBITMQ_HOST: rc-rabbitmq
         RABBITMQ_PORT: 5672
         RABBITMQ_USER: guest
@@ -179,34 +174,51 @@ services:
   rc-publications-db:
     image: mysql:5.7
     container_name: rc-publications-db
+    volumes:
+      - rc-publications-db:/var/lib/mysql
     ports:
       - 33061:3306
     environment:
       MYSQL_ROOT_PASSWORD: secret
       MYSQL_DATABASE: publications
 
-  # Pipelines Service
+  # # Pipelines Service
   
-  rc-pipelines:
-    container_name: rc-pipelines
-    build:
-      context: ./rc-pipelines
-      dockerfile: Dockerfile.dev
-    volumes:
-      - ./rc-pipelines/src:/app/src
-      - ./rc-pipelines/test:/app/test
-    environment:
-      RABBITMQ_HOST: rc-rabbitmq
-      MYSQL_HOST: rc-pipelines-db
-      MYSQL_DB: pipes
-      MYSQL_USER: root
-      MYSQL_PASS: secret
-    ports:
-      - 8005:80
+  # rc-pipelines:
+  #   container_name: rc-pipelines
+  #   build:
+  #     context: ./rc-pipelines
+  #     dockerfile: Dockerfile.dev
+  #   volumes:
+  #     - ./rc-pipelines/src:/app/src
+  #     - ./rc-pipelines/test:/app/test
+  #   environment:
+  #     RABBITMQ_HOST: rc-rabbitmq
+  #     MYSQL_HOST: rc-pipelines-db
+  #     MYSQL_DB: pipes
+  #     MYSQL_USER: root
+  #     MYSQL_PASS: secret
+  #   ports:
+  #     - 8005:80
 
-  rc-pipelines-db:
-    image: mysql:5.7
-    container_name: rc-pipelines-db
+  # rc-pipelines-db:
+  #   image: mysql:5.7
+  #   container_name: rc-pipelines-db
+  #   volumes:
+  #     - rc-pipelines-db:/var/lib/mysql
+  #   environment:
+  #     MYSQL_ROOT_PASSWORD: secret
+  #     MYSQL_DATABASE: pipes
+
+  # RabbitMQ
+
+  rc-rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rc-rabbitmq
     environment:
-      MYSQL_ROOT_PASSWORD: secret
-      MYSQL_DATABASE: pipes
+      RABBITMQ_DEFAULT_USER: "guest"
+      RABBITMQ_DEFAULT_PASS: "guest"
+      RABBITMQ_DEFAULT_VHOST: "/"
+    ports:
+      - 15672:15672
+      - 5672:5672
