@@ -19,6 +19,6 @@
 [submodule "rc-pipelines"]
 	path = rc-pipelines
 	url = https://github.com/uab-energetics/rc-pipelines
-[submodule "rc-encodings"]
-	path = rc-encodings
-	url = https://github.com/uab-energetics/rc-encodings
+[submodule "rc-extraction"]
+	path = rc-extraction
+	url = https://github.com/uab-energetics/rc-extraction
