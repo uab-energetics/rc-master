@@ -53,10 +53,10 @@ services:
   rc-authentication:
     container_name: rc-authentication
     restart: unless-stopped
-    image: gcr.io/meta-research-data-portal/github-uab-energetics-rc-authentication:master
-    # build:
-    #   context: ./rc-authentication
-    #   dockerfile: Dockerfile.dev
+    #image: gcr.io/meta-research-data-portal/github-uab-energetics-rc-authentication:master
+    build:
+       context: ./rc-authentication
+       dockerfile: Dockerfile.dev
     volumes:
       - .keys/rc-auth.key:/private-key.pem
       - .keys/rc-auth.key.pub:/public-key.pub
