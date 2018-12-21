@@ -182,31 +182,31 @@ services:
       MYSQL_ROOT_PASSWORD: secret
       MYSQL_DATABASE: publications
 
-  rc-extraction:
-    container_name: rc-extraction
-    build:
-      context: ./rc-extraction
-      dockerfile: Dockerfile.dev
-    volumes:
-      - ./rc-extraction/src:/app/src
-      - ./rc-extraction/test:/app/test
-    environment:
-      RABBITMQ_HOST: rc-rabbitmq
-      MYSQL_HOST: rc-extraction-db
-      MYSQL_DB: extraction
-      MYSQL_USER: root
-      MYSQL_PASS: secret
-    ports:
-      - 8006:80
+#  rc-extraction:
+#    container_name: rc-extraction
+#    build:
+#      context: ./rc-extraction
+#      dockerfile: Dockerfile.dev
+#    volumes:
+#      - ./rc-extraction/src:/app/src
+#      - ./rc-extraction/test:/app/test
+#    environment:
+#      RABBITMQ_HOST: rc-rabbitmq
+#      MYSQL_HOST: rc-extraction-db
+#      MYSQL_DB: extraction
+#      MYSQL_USER: root
+#      MYSQL_PASS: secret
+#    ports:
+#      - 8006:80
 
-  rc-extraction-db:
-    image: mysql:5.7
-    container_name: rc-extraction-db
-    ports:
-      - 33062:3306
-    environment:
-      MYSQL_ROOT_PASSWORD: secret
-      MYSQL_DATABASE: extraction
+#  rc-extraction-db:
+#    image: mysql:5.7
+#    container_name: rc-extraction-db
+#    ports:
+#      - 33062:3306
+#    environment:
+#      MYSQL_ROOT_PASSWORD: secret
+#      MYSQL_DATABASE: extraction
 
   # # Pipelines Service
   
