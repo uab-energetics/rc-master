@@ -1,6 +1,6 @@
 ## Research Coder Master
 This repository contains submodules for all of the services that compose Research Coder, 
-as well as a top-level orchestration with docker-compose
+as well as a top-level orchestration with `docker-compose`.
 
 
 ### Cloning the repository
@@ -22,12 +22,14 @@ git submodule foreach git checkout master
 
 ---
 
-### Setting up
-First, make your public and private authentication keys:
+### Prerequisites
+Of course, you'll want `docker` and `docker-compose`. If you don't add your user to the docker group, you may have to prefix following commands with `sudo`.
+
+Make your public and private authentication keys:
 ```bash
 ./scripts/generate-keys.sh
 ``` 
-Second, ensure that the docker network research-coder exists:
+Create the docker network `research-coder`:
 ```bash
 ./scripts/create-network.sh
 ```
@@ -35,9 +37,9 @@ Second, ensure that the docker network research-coder exists:
 ---
 
 ### Running the app
-You'll first want to start all of the services:
-```
-docker-compose up -d
+You'll first want to build and start all of the services:
+```bash
+docker-compose up -d --build
 ```
 
 Some of our services require some additional database setup before they're ready. Run the following to get everything squared away:
