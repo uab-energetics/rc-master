@@ -35,15 +35,10 @@ Second, ensure that the docker network research-coder exists:
 ---
 
 ### Running the app
-Since the majority of the services depend on `rabbitmq`, we provide a helper script to run it before starting the rest of the services with `docker-compose up`. Use it as follows:
-```bash
-./scripts/up.sh
+You'll first want to start all of the services:
 ```
-Any arguments passed to `up.sh` will be passed along to `docker-compose up`. For example, if you want to rebuild and run detached, you would use
-```bash
-./scripts.up.sh --build -d
+docker-compose up -d
 ```
-
 
 Some of our services require some additional database setup before they're ready. Run the following to get everything squared away:
 ```bash
